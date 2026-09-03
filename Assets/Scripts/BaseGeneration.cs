@@ -17,7 +17,7 @@ public class BaseGeneration : MonoBehaviour
             gameObject.name = "Base " + (GameManager.Instance.allBases.Count - 1);
 
             #region Delete Bases
-            if(GameManager.Instance.allBases.Count >= 6)
+            if (GameManager.Instance.allBases.Count >= 6)
             {
                 GameObject baseToDelete = GameManager.Instance.allBases[GameManager.Instance.deleteBaseCount];
                 Destroy(baseToDelete);

@@ -11,6 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private int currentLane = 1;
     private float verticalVelocity = 0f;
     private float groundY;
+    private float startX;
 
     #region Particle
     public ParticleSystem movementLines;
@@ -19,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        startX = transform.position.x;
         groundY = transform.position.y;
     }
 
@@ -83,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
 
     void HandleSideMovement()
     {
-        float targetX = (currentLane - 1) * sideMoveDistance;
+        float targetX = startX + (currentLane - 1) * sideMoveDistance;
         float newX = Mathf.MoveTowards(transform.position.x, targetX, sideMoveSpeed * Time.deltaTime);
         transform.position = new Vector3(newX, transform.position.y, transform.position.z);
     }
