@@ -9,19 +9,33 @@ public class BaseGeneration : MonoBehaviour
         {
             this.gameObject.SetActive(false);
             
-            GameObject gameObject = GameObject.Instantiate(GameManager.Instance.basePrefab, GameManager.Instance.nextBasePos.position, 
-                Quaternion.identity, GameManager.Instance.baseParent);
+            int randomIndex = UnityEngine.Random.Range(0, GameManager.Instance.basePool.Count);
+            GameObject currentbase = GameManager.Instance.basePool[randomIndex];
+            
+            GameManager.Instance.basePool.Remove(currentbase);
+            currentbase.transform.position = GameManager.Instance.nextBasePos.position;
+            GameManager.Instance.nextBasePos = currentbase.GetComponent<BaseManager>().nextBasePosition;
+            currentbase.SetActive(true);
+            
+            currentbase.transform.parent = GameManager.Instance.baseParent;
+            GameManager.Instance.allBases.Add(currentbase);
+            currentbase.name = "Base " + (GameManager.Instance.allBases.Count - 1);
 
-            GameManager.Instance.allBases.Add(gameObject);
-            GameManager.Instance.nextBasePos = gameObject.GetComponent<BaseManager>().nextBasePosition;
-            gameObject.name = "Base " + (GameManager.Instance.allBases.Count - 1);
-
-            #region Delete Bases
+            #region Return bases to pool
             if (GameManager.Instance.allBases.Count >= 6)
             {
-                GameObject baseToDelete = GameManager.Instance.allBases[GameManager.Instance.deleteBaseCount];
-                Destroy(baseToDelete);
-                GameManager.Instance.deleteBaseCount += 1;
+                GameObject baseToPool = GameManager.Instance.allBases[GameManager.Instance.baseToRemoveCount];
+                GameManager.Instance.allBases[GameManager.Instance.baseToRemoveCount] = null;
+                baseToPool.SetActive(false);
+
+                if(baseToPool.GetComponent<BaseManager>().isPooled)
+                {
+                    baseToPool.transform.position = new Vector3(0, -1000, 0);
+                    baseToPool.transform.parent = GameManager.Instance.basePoolParent;
+                    GameManager.Instance.basePool.Add(baseToPool);
+                }
+
+                GameManager.Instance.baseToRemoveCount += 1;
             }
             #endregion
         }

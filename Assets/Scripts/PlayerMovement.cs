@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.isPaused)
+            return;
+        
         transform.Translate(transform.forward * speed * Time.deltaTime);
         HandleSideMovement();
         HandleJump();
@@ -65,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+            
     public void Jump()
     {
         if (isJumping)
